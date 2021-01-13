@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalog Films!{% endblock %}
+
+{% block body %}
+    <p class="text-center">Список любимых фильмов - {{ result|length }} </p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Year</th>
+        <th>IMDB ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in result %}
+        <tr>
+            <td><a target="_blank" href="/search?film_name={{ item.title }}">{{ item.title }}</a></td>
+            <td>{{ item.year }}</td>
+            <td>{{ item.imdbId }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+

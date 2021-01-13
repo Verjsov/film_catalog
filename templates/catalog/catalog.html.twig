@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalog Films!{% endblock %}
+
+{% block body %}
+    <p class="text-center">Список всех фильмов в базе</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Year</th>
+        <th>IMDB ID</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in result %}
+        <tr>
+            <td><a target="_blank" href="/search?film_name={{ item.title }}">{{ item.title }}</a></td>
+            <td>{{ item.year }}</td>
+            <td>{{ item.imdbId }}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="deleteFilm('{{ item.imdbId }}',this)">X</button></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+{% block javascripts %}
+<script>
+    async function deleteFilm(imdb,btn) {
+        const ask = confirm('Вы точно желаете удалить этот фильм из базы ?')
+        if (ask){
+            btn.innerHTML='';
+            btn.setAttribute("disabled", "disabled");
+            btn.insertAdjacentHTML('beforeend','<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>')
+            const response = await fetch(`/catalogs/dell/${imdb}`);
+            const body = await response.json();
+            if (body.result === 'ok')
+                document.location.reload();
+        }
+    }
+</script>
+{% endblock %}
+
+

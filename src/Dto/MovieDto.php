@@ -14,4 +14,6 @@ class MovieDto
     public $imdbId;
     public $poster;
     public $type;
+    public $favorite;
+    public $catalog;
 }

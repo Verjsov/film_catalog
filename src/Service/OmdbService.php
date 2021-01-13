@@ -58,7 +58,10 @@ class OmdbService implements OmdbServiceInterface
 
         $content = json_decode($request->getBody()->getContents(), true);
         $content = $this->ensureResponseOk($content);
-        return $this->toDto($content);
+        if ($content !== null)
+            return $this->toDto($content);
+        else
+            return null;
     }
 
     /**
@@ -69,7 +72,7 @@ class OmdbService implements OmdbServiceInterface
      */
     private function ensureResponseOk(array $content): ?array
     {
-        return (in_array('Error', $content)) ? null : $content;
+        return (key_exists('Error', $content)) ? null : $content;
     }
 
     private function toDto(array $content): MovieDto

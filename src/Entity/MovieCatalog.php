@@ -29,7 +29,6 @@ class MovieCatalog
         $this->director = $director;
         return $this;
     }
-
     /**
      * @return mixed
      */
@@ -150,6 +149,15 @@ class MovieCatalog
      */
     private $poster;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $favorite;
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $catalog;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -172,7 +180,7 @@ class MovieCatalog
         return $this->year;
     }
 
-    public function setYear(int $year): self
+    public function setYear(string $year): self
     {
         $this->year = $year;
 
@@ -191,6 +199,30 @@ class MovieCatalog
         return $this;
     }
 
+    public function getFavorite(): ?string
+    {
+        return $this->favorite;
+    }
+
+    public function setFavorite(?string $favorite): self
+    {
+        $this->favorite = $favorite;
+
+        return $this;
+    }
+
+    public function getCatalog(): ?string
+    {
+        return $this->catalog;
+    }
+
+    public function setCatalog(?string $catalog): self
+    {
+        $this->catalog = $catalog;
+
+        return $this;
+    }
+
     public function toDto(): MovieDto
     {
         $movieDto = new MovieDto();
@@ -202,6 +234,8 @@ class MovieCatalog
         $movieDto->plot = $this->plot;
         $movieDto->poster = $this->poster;
         $movieDto->release = $this->released->format('d M Y');
+        $movieDto->favorite = $this->favorite;
+        $movieDto->catalog = $this->catalog;
         return $movieDto;
     }
 }

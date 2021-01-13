@@ -29,6 +29,65 @@ class MovieCatalogRepository extends ServiceEntityRepository
         return $query->getOneOrNullResult();
     }
 
+    public function setFavorite(string $imdb): void
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->update()
+            ->set('m.favorite',$qb->expr()->literal('Y'))
+            ->where('m.imdbId = :imdb')
+            ->setParameter('imdb',$imdb)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function delFavorite(string $imdb): void
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->update()
+            ->set('m.favorite',$qb->expr()->literal('N'))
+            ->where('m.imdbId = :imdb')
+            ->setParameter('imdb', $imdb)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getAll(): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        return $qb->select()
+            ->getQuery()
+            ->execute();
+
+    }
+
+    public function getAllCount(): int
+    {
+        $qb = $this->createQueryBuilder('m');
+        return $qb->select('count(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getAllFavorite($state): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        return $qb->select()
+            ->where('m.favorite = :state')
+            ->setParameter('state', $state)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function delFromCatalog($imdb): void
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->delete()
+            ->where('m.imdbId = :imdb')
+            ->setParameter('imdb', $imdb)
+            ->getQuery()
+            ->execute();
+    }
+
     public function save(MovieDto $movieDto)
     {
         $movie = new MovieCatalog();
@@ -39,7 +98,9 @@ class MovieCatalogRepository extends ServiceEntityRepository
             ->setPoster($movieDto->poster)
             ->setReleased(new \DateTime($movieDto->release))
             ->setType($movieDto->type)
-            ->setYear($movieDto->year);
+            ->setYear($movieDto->year)
+            ->setFavorite($movieDto->favorite)
+            ->setCatalog($movieDto->catalog);
         $this->getEntityManager()->persist($movie);
         $this->getEntityManager()->flush();
     }
